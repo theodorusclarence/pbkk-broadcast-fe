@@ -1,36 +1,58 @@
 import Seo from '@/components/Seo';
-import CustomLink from '@/components/CustomLink';
+import { useEffect, useState } from 'react';
+import Chats from '@/components/Chats';
 
 export default function Home() {
+  const [username, setUsername] = useState('Anonymous');
+  const [message, setMessage] = useState('');
+  const [chats, setChats] = useState([
+    { id: '1', username: 'Anonymous', message: 'Halo Bambang' },
+    { id: '2', username: 'Anonymous 2', message: 'Halo Bambang2' },
+    { id: '3', username: 'Anonymous 3', message: 'Halo Bambang3' },
+    { id: '4', username: 'Anonymous', message: 'Halo Bambang' },
+  ]);
+
+  const handleMessage = (e) => {
+    if (e.keyCode === 13) {
+      const payload = {
+        username,
+        message,
+      };
+      console.log(payload);
+      setMessage('');
+      // axios.post('http://localhost:5000/message', payload);
+    } else {
+      setMessage(e.target.value);
+    }
+  };
+
+  useEffect(() => {
+    // const username = window.prompt('Username: ', 'Anonymous');
+    // setUsername(username);
+  }, []);
+
   return (
     <>
       <Seo />
 
       <main>
         <section className='bg-dark'>
-          <div className='flex flex-col items-center justify-center min-h-screen text-white layout'>
-            <h1>
-              <CustomLink href='https://github.com/theodorusclarence/nextjs-tailwind-starter'>
-                NextJS Tailwind Starter
-              </CustomLink>
-            </h1>
-            <p className='mb-4'></p>
-            <a
-              target='_blank'
-              rel='noopener noreferer'
-              href='https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Ftheodorusclarence%2Fnextjs-tailwind-starter'
-            >
-              <img src='https://vercel.com/button' alt='Deploy with Vercel' />
-            </a>
-            <div className='mt-8 text-dark'>
-              <p className='text-[#ffe347]'>JIT is on</p>
+          <div className='flex flex-col items-center min-h-screen py-16 space-y-4 text-white layout'>
+            <h1>Broadcasting using Pusher</h1>
+            <h3>Hello {username}!</h3>
+            <div className='w-full max-w-md'>
+              <input
+                type='text'
+                value={message}
+                onChange={handleMessage}
+                onKeyDown={handleMessage}
+                placeholder='Write your message, then press enter.'
+                className='w-full border border-gray-600 rounded-lg bg-dark focus:ring-primary-400'
+              />
             </div>
-            <footer className='absolute text-gray-500 bottom-2'>
-              © {new Date().getFullYear()} By{' '}
-              <CustomLink href='https://theodorusclarence.com?ref=nextstarter'>
-                Theodorus Clarence
-              </CustomLink>
-            </footer>
+
+            {/* Messages */}
+            <Chats chats={chats} />
           </div>
         </section>
       </main>
