@@ -92,6 +92,7 @@ class MyDocument extends Document {
             name='msapplication-TileImage'
             content='/favicon/ms-icon-144x144.png'
           />
+          <meta name='csrf-token' content='{{ csrf_token() }}' />
           <meta name='theme-color' content='#ffffff' />
         </Head>
         <body>
