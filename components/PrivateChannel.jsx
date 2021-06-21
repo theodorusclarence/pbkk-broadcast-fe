@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import Pusher from 'pusher-js';
+import axios from 'axios';
 
-import Seo from '@/components/Seo';
-import PublicChannel from '@/components/PublicChannel';
-import PrivateChannel from '@/components/PrivateChannel';
+import Chats from '@/components/Chats';
 
-export default function Home() {
+export default function PrivateChannel() {
   const [username, setUsername] = useState('Anonymous');
   const [message, setMessage] = useState('');
   const [chats, setChats] = useState([]);
@@ -15,6 +14,7 @@ export default function Home() {
       const payload = {
         name_from: username,
         message,
+        scope: 'private',
       };
       console.log(payload);
       setMessage('');
@@ -32,8 +32,8 @@ export default function Home() {
       'meta[name="csrf-token"]'
     ).content;
     console.log('🚀 ~ file: index.jsx ~ line 31 ~ useEffect ~ token', token);
-    // const username = window.prompt('Username: ', 'Anonymous');
-    // setUsername(username);
+    const username = window.prompt('Username (Private): ', 'Anonymous');
+    setUsername(username);
     const pusher = new Pusher(PUSHER_APP_KEY, {
       cluster: PUSHER_APP_CLUSTER,
       encrypted: true,
@@ -50,12 +50,25 @@ export default function Home() {
 
   return (
     <>
-      <Seo />
+      <section className='bg-dark'>
+        <div className='flex flex-col items-center min-h-screen py-16 space-y-4 text-white layout'>
+          <h1>Private Broadcasting using Pusher</h1>
+          <h3>Hello {username}!</h3>
+          <div className='w-full max-w-md'>
+            <input
+              type='text'
+              value={message}
+              onChange={handleMessage}
+              onKeyDown={handleMessage}
+              placeholder='Write your message, then press enter.'
+              className='w-full border border-gray-600 rounded-lg bg-dark focus:ring-primary-400'
+            />
+          </div>
 
-      <main>
-        <PublicChannel />
-        <PrivateChannel />
-      </main>
+          {/* Messages */}
+          <Chats chats={chats} />
+        </div>
+      </section>
     </>
   );
 }
